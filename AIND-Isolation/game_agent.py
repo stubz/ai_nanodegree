@@ -216,6 +216,47 @@ class MinimaxPlayer(IsolationPlayer):
         legal_moves = game.get_legal_moves()
         if not legal_moves:
             return (-1, -1)
+
+        if depth <= 0:
+            return (-1, -1)
+
+        # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
+        # https://github.com/aimacode/aima-python/blob/master/games.py
+        def max_value():
+            if self.time_left() < self.TIMER_THRESHOLD:
+                raise SearchTimeout()
+            #v = -infinity
+            v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+
+        def min_value():
+            if self.time_left() < self.TIMER_THRESHOLD:
+                raise SearchTimeout()
+            v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+            
+        """
+        def max_value(state):
+            if game.terminal_test(state):
+                return game.utility(state, player)
+            v = -infinity
+            for a in game.actions(state):
+                v = max(v, min_value(game.result(state, a)))
+            return v
+
+        def min_value(state):
+            if game.terminal_test(state):
+                return game.utility(state, player)
+            v = infinity
+            for a in game.actions(state):
+                v = min(v, max_value(game.result(state, a)))
+            return v
+
+        # Body of minimax_decision:
+        return argmax(game.actions(state),
+                      key=lambda a: min_value(game.result(state, a)))
+        """
+
+#        _, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+
         return legal_moves[0]
 
 
