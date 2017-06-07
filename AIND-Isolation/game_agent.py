@@ -225,6 +225,7 @@ class MinimaxPlayer(IsolationPlayer):
         def max_value(self, game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
+            depth -= 1
             if depth <= 0:
                 return max([self.score(game.forecast_move(m), self) for m in game.get_legal_moves()])
             v = -infinity
@@ -237,6 +238,7 @@ class MinimaxPlayer(IsolationPlayer):
         def min_value(self, game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
+            depth -= 1
             if depth <= 0:
                 return min([self.score(game.forecast_move(m), self) for m in game.get_legal_moves()])
             v = infinity
