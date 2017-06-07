@@ -254,11 +254,11 @@ class MinimaxPlayer(IsolationPlayer):
                 v, move = min((v, move), max_value(game.forecast_move(m), depth))
             return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-        
+
         # Body of minimax_decision:
         return argmax(game.get_legal_moves(),
                       key=lambda m: min_value(game.forecast_move(m), depth))
-            
+
         """
         def max_value(state):
             if game.terminal_test(state):
@@ -281,7 +281,7 @@ class MinimaxPlayer(IsolationPlayer):
 
 #        _, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
-        return legal_moves[0]
+        #return legal_moves[0]
 
 
 class AlphaBetaPlayer(IsolationPlayer):
