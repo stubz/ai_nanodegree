@@ -225,26 +225,35 @@ class MinimaxPlayer(IsolationPlayer):
         def max_value(self, game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
+            legal_moves = game.get_legal_moves()
+            if not legal_moves:
+                return (-infinity, (-1, -1))
+            
             depth -= 1
             if depth <= 0:
-                return max([self.score(game.forecast_move(m), self) for m in game.get_legal_moves()])
+                return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             v = -infinity
-            for m in game.get_legal_moves():
-                v = max(v, min_value(game.forecast_move(m), depth))
-            return v
+            move = (-1, -1)
+            for m in legal_moves:
+                v, move = max((v, move), min_value(game.forecast_move(m), depth))
+            return (v, move)
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         def min_value(self, game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
+            legal_moves = game.get_legal_moves()
+            if not legal_moves:
+                return (infinity, (-1, -1))
             depth -= 1
             if depth <= 0:
-                return min([self.score(game.forecast_move(m), self) for m in game.get_legal_moves()])
+                return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             v = infinity
-            for m in game.get_legal_moves():
-                v = min(v, max_value(game.forecast_move(m), depth))
-            return v
+            move = (-1, -1)
+            for m in legal_moves:
+                v, move = min((v, move), max_value(game.forecast_move(m), depth))
+            return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
         
         # Body of minimax_decision:
