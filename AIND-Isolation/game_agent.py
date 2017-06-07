@@ -227,15 +227,27 @@ class MinimaxPlayer(IsolationPlayer):
                 raise SearchTimeout()
             if depth <= 0:
                 return (-infinity, (-1, -1))
-            #v = -infinity
-            v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+            v = -infinity
+            for m in game.get_legal_moves():
+                v = max(v, min_value(game.forecast_move(m), depth))
+            return v
+
+            # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         def min_value(self, game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
             if depth <= 0:
                 return (infinity, (-1, -1))
-            v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+            v = infinity
+            for m in game.get_legal_moves():
+                v = min(v, max_value(game.forecast_move(m), depth))
+            return v
+            # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+        
+        # Body of minimax_decision:
+        return argmax(game.actions(state),
+                      key=lambda a: min_value(game.result(state, a)))
             
         """
         def max_value(state):
