@@ -230,7 +230,6 @@ class MinimaxPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-
             depth -= 1
             if depth <= 0:
                 return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
@@ -255,11 +254,11 @@ class MinimaxPlayer(IsolationPlayer):
                 v, move = min((v, move), max_value(game.forecast_move(m), depth))
             return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-
+        
         # Body of minimax_decision:
         return argmax(game.get_legal_moves(),
                       key=lambda m: min_value(game.forecast_move(m), depth))
-
+            
         """
         def max_value(state):
             if game.terminal_test(state):
