@@ -222,7 +222,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
         # https://github.com/aimacode/aima-python/blob/master/games.py
-        def max_value(self, game, depth):
+        def max_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
             v = -infinity
@@ -239,7 +239,7 @@ class MinimaxPlayer(IsolationPlayer):
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
-        def min_value(self, game, depth):
+        def min_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
             v = infinity
@@ -256,7 +256,7 @@ class MinimaxPlayer(IsolationPlayer):
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         # Body of minimax_decision:
-        return np.argmax(game.get_legal_moves(),
+        return max(game.get_legal_moves(),
                       key=lambda m: min_value(game.forecast_move(m), depth))
 
         """
