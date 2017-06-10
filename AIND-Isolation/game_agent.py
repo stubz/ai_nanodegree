@@ -267,31 +267,6 @@ class MinimaxPlayer(IsolationPlayer):
         return max(game.get_legal_moves(),
                       key=lambda m: min_value(game.forecast_move(m), depth))
 
-        """
-        def max_value(state):
-            if game.terminal_test(state):
-                return game.utility(state, player)
-            v = -infinity
-            for a in game.actions(state):
-                v = max(v, min_value(game.result(state, a)))
-            return v
-        def min_value(state):
-            if game.terminal_test(state):
-                return game.utility(state, player)
-            v = infinity
-            for a in game.actions(state):
-                v = min(v, max_value(game.result(state, a)))
-            return v
-        # Body of minimax_decision:
-        return argmax(game.actions(state),
-                      key=lambda a: min_value(game.result(state, a)))
-        """
-
-#        _, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-
-        #return legal_moves[0]
-
-
 class AlphaBetaPlayer(IsolationPlayer):
     """Game-playing agent that chooses a move using iterative deepening minimax
     search with alpha-beta pruning. You must finish and test this player to
@@ -382,4 +357,59 @@ class AlphaBetaPlayer(IsolationPlayer):
             raise SearchTimeout()
 
         # TODO: finish this function!
-        return self.get_legal_moves()[0]
+        legal_moves = game.get_legal_moves()
+        if not legal_moves:
+            return (-1, -1)
+
+        if depth <= 0:
+            return (-1, -1)
+
+        # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
+        # https://github.com/aimacode/aima-python/blob/master/games.py
+        def max_value(game, alpha, beta, depth):
+            if self.time_left() < self.TIMER_THRESHOLD:
+                raise SearchTimeout()
+            v = -float('inf')
+            move = (-1, -1)
+            legal_moves = game.get_legal_moves()
+            if not legal_moves:
+                return (v, move)
+            if depth <= 0:
+                return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+            for m in legal_moves:
+                v, move = max((v, move), min_value(game.forecast_move(m), alpha, beta, depth-1))
+                if v >= beta:
+                    return (v, move)
+                alpha = max(alpha, v)
+            return (v, move)
+
+            # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+
+        def min_value(game, alpha, beta, depth):
+            if self.time_left() < self.TIMER_THRESHOLD:
+                raise SearchTimeout()
+            v = float('inf')
+            move = (-1, -1)
+            legal_moves = game.get_legal_moves()
+            if not legal_moves:
+                return (v, move)
+            if depth <= 0:
+                return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+            for m in legal_moves:
+                v, move = min((v, move), max_value(game.forecast_move(m), alpha, beta, depth-1))
+                if v <= alpha:
+                    return (v, move)
+                beta = min(beta, v)
+            return (v, move)
+            # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+
+        # Body of alpha_beta_function:
+        best_score = -float('inf')
+        best_move = (-1, -1)
+        for m in game.get_legal_moves():
+            v, move = min_value(game.forecast_move(m), best_score, beta, depth)
+            if v > best_score:
+                best_score = v
+                best_move = move
+        return best_move
+        
