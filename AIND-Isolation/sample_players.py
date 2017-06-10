@@ -422,7 +422,8 @@ if __name__ == "__main__":
 
     # create an isolation board (by default 7x7)
     player1 = RandomPlayer()
-    player2 = GreedyPlayer()
+    # player2 = GreedyPlayer()
+    player2 = MinimaxPlayer()
     game = Board(player1, player2)
 
     # place player 1 on the board at row 2, column 3, then place player 2 on
