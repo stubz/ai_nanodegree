@@ -3,7 +3,7 @@ test your agent's strength against a set of known agents using tournament.py
 and include the results in your report.
 """
 import random
-
+import numpy as np
 
 class SearchTimeout(Exception):
     """Subclass base exception for code clarity. """
@@ -256,7 +256,7 @@ class MinimaxPlayer(IsolationPlayer):
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         # Body of minimax_decision:
-        return argmax(game.get_legal_moves(),
+        return np.argmax(game.get_legal_moves(),
                       key=lambda m: min_value(game.forecast_move(m), depth))
 
         """
