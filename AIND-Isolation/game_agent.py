@@ -225,7 +225,7 @@ class MinimaxPlayer(IsolationPlayer):
         def max_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
-            v = -infinity
+            v = -float('inf')
             move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
@@ -242,7 +242,7 @@ class MinimaxPlayer(IsolationPlayer):
         def min_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
-            v = infinity
+            v = float('inf')
             move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
