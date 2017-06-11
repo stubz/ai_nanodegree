@@ -389,10 +389,11 @@ class AlphaBetaPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            if depth <= 0:
+            depth -= 1
+            if depth == 0:
                 return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             for m in legal_moves:
-                v, move = max((v, move), min_value(game.forecast_move(m), alpha, beta, depth-1))
+                v, move = max((v, move), min_value(game.forecast_move(m), alpha, beta, depth))
                 if v >= beta:
                     return (v, move)
                 alpha = max(alpha, v)
@@ -408,10 +409,11 @@ class AlphaBetaPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            if depth <= 0:
+            depth -= 1
+            if depth == 0:
                 return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             for m in legal_moves:
-                v, move = min((v, move), max_value(game.forecast_move(m), alpha, beta, depth-1))
+                v, move = min((v, move), max_value(game.forecast_move(m), alpha, beta, depth))
                 if v <= alpha:
                     return (v, move)
                 beta = min(beta, v)
