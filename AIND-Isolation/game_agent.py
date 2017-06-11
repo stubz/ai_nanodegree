@@ -238,11 +238,10 @@ class MinimaxPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            depth -= 1
             if depth <= 0:
                 return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             for m in legal_moves:
-                v, move = max((v, move), min_value(game.forecast_move(m), depth))
+                v, move = max((v, move), min_value(game.forecast_move(m), depth-1))
             return (v, move)
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
@@ -255,17 +254,26 @@ class MinimaxPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            depth -= 1
             if depth <= 0:
                 return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+                # return self.score(game, self)
             for m in legal_moves:
-                v, move = min((v, move), max_value(game.forecast_move(m), depth))
+                v, move = min((v, move), max_value(game.forecast_move(m), depth-1))
             return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         # Body of minimax_decision:
-        return max(game.get_legal_moves(),
-                      key=lambda m: min_value(game.forecast_move(m), depth))
+        min_score = float('-inf')
+        best_move = None
+        score = None
+        for m in game.get_legal_moves():
+            score = min_value(game.forecast_move(m), depth-1)
+            if score > min_score:
+                min_score, best_move = score, move
+
+        #return max(game.get_legal_moves(),
+        #              key=lambda m: min_value(game.forecast_move(m), depth))
+        return best_move
 
 class AlphaBetaPlayer(IsolationPlayer):
     """Game-playing agent that chooses a move using iterative deepening minimax
