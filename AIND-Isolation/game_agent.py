@@ -397,6 +397,7 @@ class AlphaBetaPlayer(IsolationPlayer):
                 if v >= beta:
                     return (v, move)
                 alpha = max(alpha, v)
+                self.alpha = alpha
             return (v, move)
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
@@ -417,6 +418,7 @@ class AlphaBetaPlayer(IsolationPlayer):
                 if v <= alpha:
                     return (v, move)
                 beta = min(beta, v)
+                self.beta = beta
             return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
