@@ -307,7 +307,13 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
-        best_move = (-1, -1)
+        # best_move = game.get_legal_moves()[0]
+        # best_move = (-1,-1)
+        legal_moves = game.get_legal_moves()
+        if not legal_moves:
+            best_move = (-1,-1)
+        else:
+            _, best_move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         try:
             # The try/except block will automatically catch the exception
@@ -376,8 +382,8 @@ class AlphaBetaPlayer(IsolationPlayer):
         if not legal_moves:
             return (-1, -1)
 
-        if depth <= 0:
-            return (-1, -1)
+        #if depth <= 0:
+        #    return (-1, -1)
 
         # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
         # https://github.com/aimacode/aima-python/blob/master/games.py
@@ -389,15 +395,13 @@ class AlphaBetaPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            depth -= 1
             if depth == 0:
                 return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             for m in legal_moves:
-                v, move = max((v, move), min_value(game.forecast_move(m), alpha, beta, depth))
+                v, move = max((v, move), min_value(game.forecast_move(m), alpha, beta, depth-1))
                 if v >= beta:
                     return (v, move)
                 alpha = max(alpha, v)
-                self.alpha = alpha
             return (v, move)
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
@@ -410,21 +414,19 @@ class AlphaBetaPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return (v, move)
-            depth -= 1
             if depth == 0:
                 return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
             for m in legal_moves:
-                v, move = min((v, move), max_value(game.forecast_move(m), alpha, beta, depth))
+                v, move = min((v, move), max_value(game.forecast_move(m), alpha, beta, depth-1))
                 if v <= alpha:
                     return (v, move)
                 beta = min(beta, v)
-                self.beta = beta
             return (v, move)
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         # Body of alpha_beta_function:
         best_score = -float('inf')
-        best_move = (-1, -1)
+        best_move = None
         for m in game.get_legal_moves():
             v, move = min_value(game.forecast_move(m), best_score, beta, depth)
             if v > best_score:
