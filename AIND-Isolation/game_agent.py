@@ -223,43 +223,59 @@ class MinimaxPlayer(IsolationPlayer):
         # TODO: finish this function!
         legal_moves = game.get_legal_moves()
         if not legal_moves:
-            return (-1, -1)
+            return game.utility(self)
 
         if depth <= 0:
-            return (-1, -1)
+            return self.score(game, self)
 
         # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
         # https://github.com/aimacode/aima-python/blob/master/games.py
         def max_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
-            v = -float('inf')
-            move = (-1, -1)
+            best_score = float('-inf')
+            best_move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
-                return (v, move)
+                # return (v, move)
+                return best_score
+                # return game.utility(self)
             if depth <= 0:
-                return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+                #return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+                return max([self.score(game.forecast_move(m), self) for m in legal_moves])
+                #return self.score(game, self)
+
             for m in legal_moves:
-                v, move = max((v, move), min_value(game.forecast_move(m), depth-1))
-            return (v, move)
+                v = min_value(game.forecast_move(m), depth-1)
+                if v > best_score:
+                    best_move = m
+                    best_score = v
+                # v, move = max((v, move), min_value(game.forecast_move(m), depth-1))
+            return best_score
 
             # v, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         def min_value(game, depth):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
-            v = float('inf')
-            move = (-1, -1)
+            best_score = float('inf')
+            best_move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
-                return (v, move)
+                # return (v, move)
+                # return game.utility(self)
+                return best_score
             if depth <= 0:
-                return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+                # return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
+                return min([self.score(game.forecast_move(m), self) for m in legal_moves])
                 # return self.score(game, self)
             for m in legal_moves:
-                v, move = min((v, move), max_value(game.forecast_move(m), depth-1))
-            return (v, move)
+                # v, move = min((v, move), max_value(game.forecast_move(m), depth-1))
+                v = max_value(game.forecast_move(m), depth-1)
+                if v < best_score:
+                    best_move = m
+                    best_score = v
+            return best_score
             # v, move = min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
 
         # Body of minimax_decision:
@@ -267,9 +283,9 @@ class MinimaxPlayer(IsolationPlayer):
         best_move = None
         score = None
         for m in game.get_legal_moves():
-            score = min_value(game.forecast_move(m), depth-1)
+            score, move = min_value(game.forecast_move(m), depth-1)
             if score > min_score:
-                min_score, best_move = score, move
+                min_score, best_move = score, m
 
         #return max(game.get_legal_moves(),
         #              key=lambda m: min_value(game.forecast_move(m), depth))
