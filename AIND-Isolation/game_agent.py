@@ -409,7 +409,7 @@ class AlphaBetaPlayer(IsolationPlayer):
             for m in legal_moves:
                 v = max(v, min_value(game.forecast_move(m), alpha, beta, depth-1))
                 if v >= beta:
-                    return (v, move)
+                    return v
                 alpha = max(alpha, v)
             return v
 
