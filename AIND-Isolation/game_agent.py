@@ -439,5 +439,5 @@ class AlphaBetaPlayer(IsolationPlayer):
             v = min_value(game.forecast_move(m), best_score, beta, depth-1)
             if v > best_score:
                 best_score = v
-                best_move = move
+                best_move = m
         return best_move
