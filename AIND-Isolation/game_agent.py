@@ -238,12 +238,12 @@ class MinimaxPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 # return (v, move)
-                return best_score
-                # return game.utility(self)
+                # return best_score
+                return game.utility(self)
             if depth <= 0:
                 #return max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-                return max([self.score(game.forecast_move(m), self) for m in legal_moves])
-                #return self.score(game, self)
+                #return max([self.score(game.forecast_move(m), self) for m in legal_moves])
+                return self.score(game, self)
 
             for m in legal_moves:
                 v = min_value(game.forecast_move(m), depth-1)
@@ -263,12 +263,12 @@ class MinimaxPlayer(IsolationPlayer):
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 # return (v, move)
-                # return game.utility(self)
-                return best_score
+                return game.utility(self)
+                # return best_score
             if depth <= 0:
                 # return min([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-                return min([self.score(game.forecast_move(m), self) for m in legal_moves])
-                # return self.score(game, self)
+                #return min([self.score(game.forecast_move(m), self) for m in legal_moves])
+                return self.score(game, self)
             for m in legal_moves:
                 # v, move = min((v, move), max_value(game.forecast_move(m), depth-1))
                 v = max_value(game.forecast_move(m), depth-1)
