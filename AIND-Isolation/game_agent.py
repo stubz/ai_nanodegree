@@ -41,7 +41,25 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    return float(len(game.get_legal_moves(player)))
+    # calculate the reflection point of the opponent and tries to get closer to the reflection point
+    # first calculate the centre of the board
+    w, h = np.floor(game.width / 2.), np.floor(game.height / 2.)
+    # get the current position of the player and the opponent
+    y1, x1 = game.get_player_location(player)
+    y2, x2 = game.get_player_location(game.get_opponent(player))
+    # calculate the distance between the centre and the opponent's position
+    dx, dy = x2 - w, y2 - h
+    # calculate the reflection point of the opponent
+    rx, ry = w - dx, h - dy
+
+    # calculate the distance from the next move to the reflection point
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+
+    # we want to minimise so return the negative distance
+    return(float(-abs(rx - x1)-abs(ry - y1)))
+
+    # return float(len(game.get_legal_moves(player)))
 
     #raise NotImplementedError
 
@@ -410,14 +428,6 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        # TODO: finish this function!
-        legal_moves = game.get_legal_moves()
-        if not legal_moves:
-            return game.utility(self)
-
-        if depth <= 0:
-            return self.score(game, self)
-
         # https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
         # https://github.com/aimacode/aima-python/blob/master/games.py
         def max_value(game, alpha, beta, depth):
@@ -454,10 +464,19 @@ class AlphaBetaPlayer(IsolationPlayer):
                 beta = min(beta, v)
             return v
 
+        # TODO: finish this function!
+        legal_moves = game.get_legal_moves()
+        if not legal_moves:
+            return game.utility(self)
+
+        if depth <= 0:
+            return self.score(game, self)
+
         # Body of alpha_beta_function:
         best_score = -float('inf')
         #_, best_move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
-        best_move = None
+
+        best_move = legal_moves[random.randint(0, len(legal_moves) - 1)]
         for m in game.get_legal_moves():
             v = min_value(game.forecast_move(m), best_score, beta, depth-1)
             if v > best_score:
