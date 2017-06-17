@@ -110,8 +110,15 @@ def custom_score_3(game, player):
         return float("inf")
 
     w, h = game.width / 2., game.height / 2.
-    y, x = game.get_player_location(player)
-    return float((h - y)**2 + (w - x)**2)
+    y1, x1 = game.get_player_location(player)
+    y2, x2 = game.get_player_location(game.get_opponent(player))
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+
+    dist_to_opponent = abs(x1-x2) + abs(y1-y2) # L1 distance to the opponent
+    dist_to_centre = abs(x1-w) + abs(y1-h) # L1 distance to the centre of the board
+
+    return float((own_moves - 2*opp_moves) + dist_to_centre - dist_to_opponent)
 
 
 class IsolationPlayer:
