@@ -339,7 +339,7 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
-        best_move = (-1,-1)
+        _, best_move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
         depth = 1
 
         try:
@@ -419,7 +419,6 @@ class AlphaBetaPlayer(IsolationPlayer):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
             v = -float('inf')
-            move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return game.utility(self)
@@ -438,7 +437,6 @@ class AlphaBetaPlayer(IsolationPlayer):
             if self.time_left() < self.TIMER_THRESHOLD:
                 raise SearchTimeout()
             v = float('inf')
-            move = (-1, -1)
             legal_moves = game.get_legal_moves()
             if not legal_moves:
                 return game.utility(self)
@@ -453,7 +451,7 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         # Body of alpha_beta_function:
         best_score = -float('inf')
-        best_move = None
+        _, best_move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
         for m in game.get_legal_moves():
             v = min_value(game.forecast_move(m), best_score, beta, depth-1)
             if v > best_score:
