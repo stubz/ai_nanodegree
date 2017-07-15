@@ -210,7 +210,7 @@ class AirCargoProblem(Problem):
         executed.
         """
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
-        count = 0
+        count = len(self.goal)
         return count
 
 
@@ -323,6 +323,7 @@ def air_cargo_p3() -> AirCargoProblem:
     init = FluentState(pos, neg)
     goal = [expr('At(C1, JFK)'),
             expr('At(C2, SFO)'),
-            expr('At(C3, SFO)'),
+            expr('At(C3, JFK)'),
+            expr('At(C4, SFO)'),
             ]
     return AirCargoProblem(cargos, planes, airports, init, goal)
