@@ -14,7 +14,7 @@ def window_transform_series(series, window_size):
     y = []
 
     P = len(series)
-    X = [series[i:i+window_size] for i in range(P-window_size+1)]
+    X = [series[i:i+window_size] for i in range(P-window_size)]
     y = [series[i+window_size] for i in range(P-window_size)]
     # reshape each
     X = np.asarray(X)
