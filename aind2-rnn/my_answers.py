@@ -50,7 +50,23 @@ def build_part1_RNN(window_size):
 ### TODO: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
     punctuation = ['!', ',', '.', ':', ';', '?']
+    characters = ['&','-','è','à','é','(',')','$',':','%','/','â','*','@']
 
+    text = text.replace('&',' ')
+    text = text.replace('-',' ')
+    text = text.replace('è',' ')
+    text = text.replace('à',' ')
+    text = text.replace('é',' ')
+    text = text.replace('(',' ')
+    text = text.replace(')',' ')
+    text = text.replace(':',' ')
+    text = text.replace(';',' ')
+    text = text.replace('%',' ')
+    text = text.replace('/',' ')
+    text = text.replace('$',' ')
+    text = text.replace('â',' ')
+    text = text.replace('*',' ')
+    text = text.replace('@',' ')
     return text
 
 ### TODO: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
@@ -59,9 +75,33 @@ def window_transform_text(text, window_size, step_size):
     inputs = []
     outputs = []
 
+    P = len(text)
+    inputs = [text[i:i+window_size] for i in range(0, P-window_size, step_size)]
+    outputs = [text[i+window_size] for i in range(0, P-window_size, step_size)]
+
+    # reshape each
+    #inputs = np.asarray(inputs)
+    #inputs.shape = (np.shape(inputs)[0:2])
+    #outputs = np.asarray(outputs)
+    #outputs.shape = (len(outputs),1)
+
     return inputs,outputs
 
 # TODO build the required RNN model:
 # a single LSTM hidden layer with softmax activation, categorical_crossentropy loss
 def build_part2_RNN(window_size, num_chars):
-    pass
+    """
+    layer 1 should be an LSTM module with 200 hidden units --> note this should have input_shape = (window_size,len(chars)) where len(chars) = number of unique characters in your cleaned text
+    layer 2 should be a linear module, fully connected, with len(chars) hidden units --> where len(chars) = number of unique characters in your cleaned text
+    layer 3 should be a softmax activation ( since we are solving a multiclass classification)
+    Use the categorical_crossentropy loss
+    """
+    model = Sequential()
+    model.add(LSTM(200, input_shape=(window_size, num_chars)))
+    # now model.output_shape == (None, 5)
+    # note: `None` is the batch dimension.
+
+    # fully connected layer with one unit
+    model.add(Dense(num_chars, activation='softmax'))
+
+    return model
